@@ -1,0 +1,38 @@
+apiVersion: sparkoperator.k8s.io/v1beta2
+kind: SparkApplication
+metadata:
+  name: spark-pi
+spec:
+  restartPolicy:
+    type: Never
+  mode: cluster
+  driver:
+    coreLimit: 1200m
+    cores: 1
+    labels:
+      version: 3.5.0
+    memory: 512m
+    serviceAccount: spark
+    volumeMounts:
+      - mountPath: /tmp
+        name: test-volume
+  imagePullPolicy: IfNotPresent
+  executor:
+    cores: 1
+    instances: 1
+    labels:
+      version: 3.5.0
+    memory: 512m
+    volumeMounts:
+      - mountPath: /tmp
+        name: test-volume
+  mainApplicationFile: 'local:///opt/spark/examples/jars/spark-examples_2.13-3.5.0.jar'
+  arguments:
+    - '1000'
+  volumes:
+    - emptyDir: {}
+      name: test-volume
+  type: Scala
+  image: 'public.ecr.aws/f4k1p1n4/spark@sha256:3fc86a55a758056a059daaa38a75b5b27001b7ba82166c9e2c97d79322f23c3b'
+  sparkVersion: 3.5.0
+  mainClass: org.apache.spark.examples.SparkPi

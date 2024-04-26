@@ -1,0 +1,16 @@
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: spark
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: spark-rb
+subjects:
+  - kind: ServiceAccount
+    name: spark
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: spark-role
